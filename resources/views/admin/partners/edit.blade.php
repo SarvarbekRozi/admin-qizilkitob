@@ -1,0 +1,199 @@
+@extends('layouts.admin')
+
+@section('title', 'Hamkorni tahrirlash')
+@section('page-title', 'Hamkorni tahrirlash')
+
+@section('breadcrumb')
+    <a href="{{ route('admin.dashboard') }}">Bosh</a>
+    <span class="sep">/</span>
+    <a href="{{ route('admin.partners.index') }}">Hamkorlar</a>
+    <span class="sep">/</span>
+    <span>{{ $partner->name_uz }}</span>
+@endsection
+
+@section('content')
+
+<form method="POST" action="{{ route('admin.partners.update', $partner) }}" enctype="multipart/form-data">
+@csrf @method('PUT')
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>{{ $partner->name_uz }}</h1>
+        <p class="subtitle">{{ $partner->type_label }} hamkor</p>
+    </div>
+    <div style="display:flex; gap:8px;">
+        <a href="{{ route('admin.partners.index') }}" class="btn-secondary-custom">
+            <i class="bi bi-arrow-left"></i> Orqaga
+        </a>
+        <button type="submit" class="btn-primary-custom">
+            <i class="bi bi-check-lg"></i> Saqlash
+        </button>
+    </div>
+</div>
+
+@if(session('success'))
+    <div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> {{ session('success') }}</div>
+@endif
+
+@if($errors->any())
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        <div>@foreach($errors->all() as $err) <div>{{ $err }}</div> @endforeach</div>
+    </div>
+@endif
+
+<div class="row g-3">
+
+    {{-- CHAP: asosiy ma'lumotlar --}}
+    <div class="col-lg-8">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6><i class="bi bi-translate me-2"></i>Nomi (ko'p tilli)</h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">🇺🇿 O'zbekcha nomi *</label>
+                        <input type="text" name="name_uz" class="form-control" value="{{ old('name_uz', $partner->name_uz) }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">🇷🇺 Ruscha nomi *</label>
+                        <input type="text" name="name_ru" class="form-control" value="{{ old('name_ru', $partner->name_ru) }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">🇬🇧 Inglizcha nomi *</label>
+                        <input type="text" name="name_en" class="form-control" value="{{ old('name_en', $partner->name_en) }}" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6><i class="bi bi-card-text me-2"></i>Qisqa tavsif (ko'p tilli)</h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">🇺🇿 Tavsif (O'zbek)</label>
+                        <input type="text" name="description_uz" class="form-control"
+                               value="{{ old('description_uz', $partner->description_uz) }}"
+                               placeholder="Tashkilot haqida qisqa ma'lumot">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">🇷🇺 Tavsif (Rus)</label>
+                        <input type="text" name="description_ru" class="form-control"
+                               value="{{ old('description_ru', $partner->description_ru) }}"
+                               placeholder="Краткое описание организации">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">🇬🇧 Tavsif (Ingliz)</label>
+                        <input type="text" name="description_en" class="form-control"
+                               value="{{ old('description_en', $partner->description_en) }}"
+                               placeholder="Short description about the organization">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="bi bi-sliders me-2"></i>Parametrlar</h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><i class="bi bi-globe me-1"></i>Veb-sayt</label>
+                        <input type="url" name="website" class="form-control"
+                               value="{{ old('website', $partner->website) }}" placeholder="https://example.com">
+                        @if($partner->website)
+                            <div class="form-hint">
+                                <a href="{{ $partner->website }}" target="_blank" rel="noopener">
+                                    <i class="bi bi-box-arrow-up-right"></i> {{ $partner->website }}
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Turi *</label>
+                        <select name="type" class="form-select" required>
+                            <option value="international" {{ old('type', $partner->type) === 'international' ? 'selected' : '' }}>🌍 Xalqaro</option>
+                            <option value="national" {{ old('type', $partner->type) === 'national' ? 'selected' : '' }}>🇺🇿 Milliy</option>
+                            <option value="research" {{ old('type', $partner->type) === 'research' ? 'selected' : '' }}>🔬 Ilmiy</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Tartib raqami</label>
+                        <input type="number" name="order" class="form-control"
+                               value="{{ old('order', $partner->order) }}" min="0">
+                        <div class="form-hint">Kichik = avval ko'rinadi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- O'NG: logo + sozlamalar --}}
+    <div class="col-lg-4">
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6><i class="bi bi-image me-2"></i>Logo</h6>
+            </div>
+            <div class="card-body">
+                @if($partner->logo)
+                    <div style="margin-bottom:12px; padding:16px; background:#f9f9f9; border-radius:8px; text-align:center; border:1px solid var(--border);">
+                        <img src="{{ $partner->logo }}" alt="{{ $partner->name_uz }}"
+                             style="max-height:100px; max-width:100%; object-fit:contain;">
+                        <div style="margin-top:8px; font-size:12px; color:#999;">Mavjud logo</div>
+                    </div>
+                @endif
+                <div class="img-upload-area" onclick="document.getElementById('partner_logo').click()">
+                    <input type="file" id="partner_logo" name="logo" accept="image/*"
+                           onchange="previewImage(this, 'preview_logo')">
+                    <div class="img-upload-icon">🤝</div>
+                    <div class="img-upload-text">{{ $partner->logo ? 'Yangi logo yuklash' : 'Logo yuklash' }}</div>
+                    <div class="img-upload-hint">PNG, SVG, JPG, WebP &bull; Max 2MB</div>
+                </div>
+                <img id="preview_logo" src="" alt="" class="img-preview"
+                     style="display:none; object-fit:contain; background:#f9f9f9; border-radius:8px; margin-top:10px; max-height:120px; width:100%;">
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6><i class="bi bi-gear me-2"></i>Holat</h6>
+            </div>
+            <div class="card-body">
+                <div class="form-check" style="display:flex; align-items:center; gap:10px; padding:12px; background:var(--body-bg); border-radius:8px;">
+                    <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1"
+                           {{ old('is_active', $partner->is_active) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="is_active" style="cursor:pointer; font-size:14px; font-weight:500;">
+                        <i class="bi bi-eye me-1"></i> Faol (saytda ko'rinadi)
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        {{-- Xavfli zona --}}
+        <div class="card" style="border-color:#fee2e2;">
+            <div class="card-header" style="background:#fff5f5;">
+                <h6 style="color:#dc2626;"><i class="bi bi-trash me-2"></i>O'chirish</h6>
+            </div>
+            <div class="card-body">
+                <p style="font-size:13px; color:#666; margin-bottom:12px;">Bu hamkorni butunlay o'chirish</p>
+                <form method="POST" action="{{ route('admin.partners.destroy', $partner) }}"
+                      onsubmit="return confirm('Rostdan ham o\'chirmoqchimisiz?')">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm w-100">
+                        <i class="bi bi-trash me-1"></i> O'chirish
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</form>
+@endsection

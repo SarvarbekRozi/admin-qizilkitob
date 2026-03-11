@@ -1,0 +1,220 @@
+@extends('layouts.admin')
+
+@section('title', 'Yangi tabiiy boylik')
+@section('page-title', 'Yangi tabiiy boylik')
+
+@section('breadcrumb')
+    <a href="{{ route('admin.dashboard') }}">Bosh</a>
+    <span class="sep">/</span>
+    <a href="{{ route('admin.natural-resources.index') }}">Tabiiy boyliklar</a>
+    <span class="sep">/</span>
+    <span>Yangi</span>
+@endsection
+
+@section('content')
+
+<form method="POST" action="{{ route('admin.natural-resources.store') }}" enctype="multipart/form-data">
+@csrf
+
+<div class="page-header">
+    <div class="page-header-left">
+        <h1>Yangi tabiiy boylik</h1>
+    </div>
+    <div style="display:flex; gap:8px;">
+        <a href="{{ route('admin.natural-resources.index') }}" class="btn-secondary-custom">
+            <i class="bi bi-arrow-left"></i> Orqaga
+        </a>
+        <button type="submit" class="btn-primary-custom">
+            <i class="bi bi-check-lg"></i> Saqlash
+        </button>
+    </div>
+</div>
+
+@if($errors->any())
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-circle-fill"></i>
+        <div>@foreach($errors->all() as $err) <div>{{ $err }}</div> @endforeach</div>
+    </div>
+@endif
+
+<div class="row g-3">
+
+    <div class="col-lg-8">
+
+        <!-- Content Tabs -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6><i class="bi bi-translate me-2"></i>Kontent</h6>
+            </div>
+            <div class="card-body">
+                <div class="lang-tabs">
+                    <button type="button" class="lang-tab active" onclick="switchLang('uz', this)">🇺🇿 O'zbek</button>
+                    <button type="button" class="lang-tab" onclick="switchLang('ru', this)">🇷🇺 Русский</button>
+                    <button type="button" class="lang-tab" onclick="switchLang('en', this)">🇬🇧 English</button>
+                </div>
+
+                @foreach(['uz' => "O'zbek", 'ru' => 'Rus', 'en' => 'Ingliz'] as $lang => $langLabel)
+                <div id="lang-{{ $lang }}" class="lang-panel" style="{{ $lang !== 'uz' ? 'display:none;' : '' }}">
+                    <div class="form-group">
+                        <label class="form-label">Sarlavha ({{ $langLabel }}) *</label>
+                        <input type="text" name="title_{{ $lang }}" class="form-control"
+                               value="{{ old('title_'.$lang) }}" {{ $lang === 'uz' ? 'required' : '' }}>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Qisqa tavsif ({{ $langLabel }})</label>
+                        <textarea name="excerpt_{{ $lang }}" class="form-control" rows="3">{{ old('excerpt_'.$lang) }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kontent ({{ $langLabel }})</label>
+                        <textarea name="content_{{ $lang }}" class="form-control" rows="8">{{ old('content_'.$lang) }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Xususiyatlar ({{ $langLabel }})</label>
+                        <textarea name="features_{{ $lang }}" class="form-control" rows="4" placeholder="Har qatorda bir xususiyat...">{{ old('features_'.$lang) }}</textarea>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        <!-- Stats & Location -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6><i class="bi bi-bar-chart me-2"></i>Statistika va joylashuv</h6>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">Maydoni</label>
+                            <input type="text" name="stat_area" class="form-control" value="{{ old('stat_area') }}" placeholder="5000 ga">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">Turlar soni</label>
+                            <input type="text" name="stat_species" class="form-control" value="{{ old('stat_species') }}" placeholder="150+">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label">Muhofaza darajasi</label>
+                            <input type="text" name="stat_protected" class="form-control" value="{{ old('stat_protected') }}" placeholder="I daraja">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Kenglik (Latitude)</label>
+                            <input type="number" name="latitude" class="form-control" step="0.0000001" value="{{ old('latitude') }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Uzunlik (Longitude)</label>
+                            <input type="number" name="longitude" class="form-control" step="0.0000001" value="{{ old('longitude') }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6><i class="bi bi-gear me-2"></i>Sozlamalar</h6>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="form-label">Slug (URL)</label>
+                    <input type="text" name="slug" class="form-control" value="{{ old('slug') }}" placeholder="Avtomatik">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kategoriya</label>
+                    <input type="text" name="category" class="form-control" value="{{ old('category') }}"
+                           placeholder="Davlat qo'riqxonasi" list="category-list">
+                    <datalist id="category-list">
+                        @foreach($categories as $cat)
+                            <option value="{{ $cat }}">
+                        @endforeach
+                    </datalist>
+                </div>
+                <div class="form-check" style="display:flex; align-items:center; gap:10px; padding:12px; background:var(--body-bg); border-radius:8px; margin-bottom:10px;">
+                    <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" checked>
+                    <label class="form-check-label" for="is_active" style="cursor:pointer; font-size:14px; font-weight:500;">
+                        <i class="bi bi-eye me-1"></i> Faol
+                    </label>
+                </div>
+                <div class="form-check" style="display:flex; align-items:center; gap:10px; padding:12px; background:var(--body-bg); border-radius:8px;">
+                    <input class="form-check-input" type="checkbox" name="featured" id="featured" value="1">
+                    <label class="form-check-label" for="featured" style="cursor:pointer; font-size:14px; font-weight:500;">
+                        <i class="bi bi-star me-1" style="color:var(--secondary-dark);"></i> Featured
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6><i class="bi bi-image me-2"></i>Asosiy rasm</h6>
+            </div>
+            <div class="card-body">
+                <div class="img-upload-area" onclick="document.getElementById('res_image').click()">
+                    <input type="file" id="res_image" name="image" accept="image/*"
+                           onchange="previewImage(this, 'preview_res')">
+                    <div class="img-upload-icon">📷</div>
+                    <div class="img-upload-text">Rasm yuklash</div>
+                    <div class="img-upload-hint">PNG, JPG, WEBP &bull; Max 5MB</div>
+                </div>
+                <img id="preview_res" src="" alt="" class="img-preview" style="display:none;">
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6><i class="bi bi-images me-2"></i>Galereya</h6>
+            </div>
+            <div class="card-body">
+                <div class="img-upload-area">
+                    <input type="file" name="image_gallery[]" accept="image/*" multiple onchange="previewGallery(this)">
+                    <div class="img-upload-icon">🖼️</div>
+                    <div class="img-upload-text">Galereya rasmlari</div>
+                    <div class="img-upload-hint">Bir nechta tanlash mumkin</div>
+                </div>
+                <div id="gallery-preview" class="gallery-grid"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</form>
+@endsection
+
+@push('scripts')
+<script>
+function switchLang(lang, btn) {
+    document.querySelectorAll('.lang-panel').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('lang-' + lang).style.display = 'block';
+    btn.classList.add('active');
+}
+
+function previewGallery(input) {
+    const grid = document.getElementById('gallery-preview');
+    grid.innerHTML = '';
+    Array.from(input.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const div = document.createElement('div');
+            div.className = 'gallery-item';
+            div.innerHTML = '<img src="' + e.target.result + '">';
+            grid.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+</script>
+@endpush
