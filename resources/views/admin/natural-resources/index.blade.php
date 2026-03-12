@@ -36,8 +36,10 @@
             <label class="form-label">Kategoriya</label>
             <select name="category" class="form-select">
                 <option value="">Barchasi</option>
-                @foreach($categories as $cat)
-                    <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                @foreach($protectedAreas as $area)
+                    <option value="{{ $area->slug }}" {{ request('category') === $area->slug ? 'selected' : '' }}>
+                        {{ $area->name_uz }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -83,7 +85,9 @@
                         </td>
                         <td>
                             @if($resource->category)
-                                <span class="badge badge-green" style="font-size:10px;">{{ $resource->category }}</span>
+                                <span class="badge badge-green" style="font-size:10px;">
+                                    {{ $areasMap[$resource->category] ?? $resource->category }}
+                                </span>
                             @else
                                 <span style="color:var(--text-muted);">—</span>
                             @endif

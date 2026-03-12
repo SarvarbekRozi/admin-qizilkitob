@@ -48,15 +48,15 @@
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">🇺🇿 O'zbekcha nomi *</label>
+                        <label class="form-label">🇺🇿 O'zbekcha nomi <span class="req-badge">Majburiy</span></label>
                         <input type="text" name="name_uz" class="form-control" value="{{ old('name_uz') }}" required placeholder="Tashkilot nomi">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">🇷🇺 Ruscha nomi *</label>
+                        <label class="form-label">🇷🇺 Ruscha nomi <span class="req-badge">Majburiy</span></label>
                         <input type="text" name="name_ru" class="form-control" value="{{ old('name_ru') }}" required placeholder="Название организации">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">🇬🇧 Inglizcha nomi *</label>
+                        <label class="form-label">🇬🇧 Inglizcha nomi <span class="req-badge">Majburiy</span></label>
                         <input type="text" name="name_en" class="form-control" value="{{ old('name_en') }}" required placeholder="Organization name">
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                         <input type="url" name="website" class="form-control" value="{{ old('website') }}" placeholder="https://example.com">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Turi *</label>
+                        <label class="form-label">Turi <span class="req-badge">Majburiy</span></label>
                         <select name="type" class="form-select" required>
                             <option value="international" {{ old('type') === 'international' ? 'selected' : '' }}>🌍 Xalqaro</option>
                             <option value="national" {{ old('type','national') === 'national' ? 'selected' : '' }}>🇺🇿 Milliy</option>

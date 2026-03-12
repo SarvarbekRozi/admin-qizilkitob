@@ -53,15 +53,15 @@
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">🇺🇿 O'zbekcha nomi *</label>
+                        <label class="form-label">🇺🇿 O'zbekcha nomi <span class="req-badge">Majburiy</span></label>
                         <input type="text" name="name_uz" class="form-control" value="{{ old('name_uz', $partner->name_uz) }}" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">🇷🇺 Ruscha nomi *</label>
+                        <label class="form-label">🇷🇺 Ruscha nomi <span class="req-badge">Majburiy</span></label>
                         <input type="text" name="name_ru" class="form-control" value="{{ old('name_ru', $partner->name_ru) }}" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">🇬🇧 Inglizcha nomi *</label>
+                        <label class="form-label">🇬🇧 Inglizcha nomi <span class="req-badge">Majburiy</span></label>
                         <input type="text" name="name_en" class="form-control" value="{{ old('name_en', $partner->name_en) }}" required>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                         @endif
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Turi *</label>
+                        <label class="form-label">Turi <span class="req-badge">Majburiy</span></label>
                         <select name="type" class="form-select" required>
                             <option value="international" {{ old('type', $partner->type) === 'international' ? 'selected' : '' }}>🌍 Xalqaro</option>
                             <option value="national" {{ old('type', $partner->type) === 'national' ? 'selected' : '' }}>🇺🇿 Milliy</option>
@@ -175,7 +175,14 @@
             </div>
         </div>
 
-        {{-- Xavfli zona --}}
+    </div>
+
+</div>
+</form>
+
+{{-- O'chirish formasi ASOSIY FORMADAN TASHQARIDA --}}
+<div class="row g-3 mt-0">
+    <div class="col-lg-4 offset-lg-8">
         <div class="card" style="border-color:#fee2e2;">
             <div class="card-header" style="background:#fff5f5;">
                 <h6 style="color:#dc2626;"><i class="bi bi-trash me-2"></i>O'chirish</h6>
@@ -191,9 +198,6 @@
                 </form>
             </div>
         </div>
-
     </div>
-
 </div>
-</form>
 @endsection

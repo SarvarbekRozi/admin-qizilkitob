@@ -59,7 +59,7 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label">Ilmiy nom <span style="color:var(--primary)">*</span></label>
+                            <label class="form-label">Ilmiy nom <span class="req-badge">Majburiy</span></label>
                             <input type="text" name="scientific_name" class="form-control" value="{{ old('scientific_name') }}" placeholder="Panthera tigris" required>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label">Kategoriya <span style="color:var(--primary)">*</span></label>
+                            <label class="form-label">Kategoriya <span class="req-badge">Majburiy</span></label>
                             <select name="category" class="form-select" required>
                                 <option value="">Tanlang...</option>
                                 <option value="animal" {{ old('category') === 'animal' ? 'selected' : '' }}>🦊 Hayvon</option>
@@ -82,7 +82,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="form-label">Xavf darajasi <span style="color:var(--primary)">*</span></label>
+                            <label class="form-label">Xavf darajasi <span class="req-badge">Majburiy</span></label>
                             <select name="danger_level" class="form-select" required>
                                 <option value="">Tanlang...</option>
                                 <option value="critically_endangered" {{ old('danger_level') === 'critically_endangered' ? 'selected' : '' }}>CR - Juda xavfli</option>
@@ -113,8 +113,11 @@
                 @foreach(['uz' => "O'zbek", 'ru' => 'Rus', 'en' => 'Ingliz'] as $lang => $langLabel)
                 <div id="lang-{{ $lang }}" class="lang-panel" style="{{ $lang !== 'uz' ? 'display:none;' : '' }}">
                     <div class="form-group">
-                        <label class="form-label">Nomi ({{ $langLabel }}) <span style="color:var(--primary)">*</span></label>
-                        <input type="text" name="name_{{ $lang }}" class="form-control" value="{{ old('name_'.$lang) }}" required>
+                        <label class="form-label">
+                            Nomi ({{ $langLabel }})
+                            @if($lang === 'uz') <span class="req-badge">Majburiy</span> @endif
+                        </label>
+                        <input type="text" name="name_{{ $lang }}" class="form-control" value="{{ old('name_'.$lang) }}" {{ $lang === 'uz' ? 'required' : '' }}>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Qisqa tavsif ({{ $langLabel }})</label>

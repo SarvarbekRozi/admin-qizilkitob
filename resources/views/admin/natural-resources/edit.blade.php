@@ -55,7 +55,7 @@
                 @foreach(['uz' => "O'zbek", 'ru' => 'Rus', 'en' => 'Ingliz'] as $lang => $langLabel)
                 <div id="lang-{{ $lang }}" class="lang-panel" style="{{ $lang !== 'uz' ? 'display:none;' : '' }}">
                     <div class="form-group">
-                        <label class="form-label">Sarlavha ({{ $langLabel }}) *</label>
+                        <label class="form-label">Sarlavha ({{ $langLabel }}) @if($lang === 'uz') <span class="req-badge">Majburiy</span> @endif</label>
                         <input type="text" name="title_{{ $lang }}" class="form-control"
                                value="{{ old('title_'.$lang, $naturalResource->{'title_'.$lang}) }}"
                                {{ $lang === 'uz' ? 'required' : '' }}>
@@ -131,15 +131,16 @@
                     <input type="text" name="slug" class="form-control" value="{{ old('slug', $naturalResource->slug) }}">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Kategoriya</label>
-                    <input type="text" name="category" class="form-control"
-                           value="{{ old('category', $naturalResource->category) }}"
-                           list="category-list">
-                    <datalist id="category-list">
-                        @foreach($categories as $cat)
-                            <option value="{{ $cat }}">
+                    <label class="form-label">Kategoriya (Muhofaza hududi)</label>
+                    <select name="category" class="form-select">
+                        <option value="">— Tanlang —</option>
+                        @foreach($protectedAreas as $area)
+                            <option value="{{ $area->slug }}"
+                                {{ old('category', $naturalResource->category) === $area->slug ? 'selected' : '' }}>
+                                {{ $area->name_uz }}
+                            </option>
                         @endforeach
-                    </datalist>
+                    </select>
                 </div>
                 <div class="form-check" style="display:flex; align-items:center; gap:10px; padding:12px; background:var(--body-bg); border-radius:8px; margin-bottom:10px;">
                     <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1"

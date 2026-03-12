@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\NaturalResource;
+use App\Models\ProtectedArea;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -28,15 +29,16 @@ class NaturalResourceController extends Controller
         }
 
         $resources = $query->paginate(15)->withQueryString();
-        $categories = NaturalResource::distinct()->whereNotNull('category')->pluck('category');
+        $protectedAreas = ProtectedArea::active()->orderBy('order')->get();
+        $areasMap = $protectedAreas->pluck('name_uz', 'slug');
 
-        return view('admin.natural-resources.index', compact('resources', 'categories'));
+        return view('admin.natural-resources.index', compact('resources', 'protectedAreas', 'areasMap'));
     }
 
     public function create(): View
     {
-        $categories = NaturalResource::distinct()->whereNotNull('category')->pluck('category');
-        return view('admin.natural-resources.create', compact('categories'));
+        $protectedAreas = ProtectedArea::active()->orderBy('order')->get();
+        return view('admin.natural-resources.create', compact('protectedAreas'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -98,8 +100,8 @@ class NaturalResourceController extends Controller
 
     public function edit(NaturalResource $naturalResource): View
     {
-        $categories = NaturalResource::distinct()->whereNotNull('category')->pluck('category');
-        return view('admin.natural-resources.edit', compact('naturalResource', 'categories'));
+        $protectedAreas = ProtectedArea::active()->orderBy('order')->get();
+        return view('admin.natural-resources.edit', compact('naturalResource', 'protectedAreas'));
     }
 
     public function update(Request $request, NaturalResource $naturalResource): RedirectResponse

@@ -6,7 +6,10 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NaturalResourceController;
 use App\Http\Controllers\Admin\PartnerController;
+use App\Http\Controllers\Admin\ProtectedAreaController;
+use App\Http\Controllers\Admin\SiteStatController;
 use App\Http\Controllers\Admin\SpeciesController;
+use App\Http\Controllers\Admin\TeamMemberController;
 use Illuminate\Support\Facades\Route;
 
 // Root redirect
@@ -50,4 +53,13 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
 
     // Partners
     Route::resource('partners', PartnerController::class);
+
+    // Protected Areas
+    Route::resource('protected-areas', ProtectedAreaController::class);
+
+    // Site Stats
+    Route::resource('site-stats', SiteStatController::class);
+
+    // Team Members
+    Route::resource('team', TeamMemberController::class);
 });

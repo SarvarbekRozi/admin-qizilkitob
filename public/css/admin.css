@@ -624,7 +624,23 @@ a:hover { color: var(--primary-dark); }
     font-weight: 600;
     color: var(--text-main);
     margin-bottom: 6px;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.req-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    background: rgba(160, 51, 45, 0.1);
+    color: var(--primary);
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
 }
 
 .form-control, .form-select {

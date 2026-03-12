@@ -4,7 +4,10 @@ use App\Http\Controllers\Api\V2\BlogApiController;
 use App\Http\Controllers\Api\V2\ContactApiController;
 use App\Http\Controllers\Api\V2\NaturalResourceApiController;
 use App\Http\Controllers\Api\V2\PartnerApiController;
+use App\Http\Controllers\Api\V2\ProtectedAreaApiController;
+use App\Http\Controllers\Api\V2\SiteStatApiController;
 use App\Http\Controllers\Api\V2\SpeciesApiController;
+use App\Http\Controllers\Api\V2\TeamMemberApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +26,7 @@ Route::prefix('v2')->group(function () {
     Route::get('blog/popular',   [BlogApiController::class, 'popular']);
     Route::get('blog/categories',[BlogApiController::class, 'categories']);
     Route::get('blog',           [BlogApiController::class, 'index']);
-    Route::get('blog/{slug}',    [BlogApiController::class, 'show'])->whereAlpha('slug');
+    Route::get('blog/{slug}',    [BlogApiController::class, 'show'])->where('slug', '[a-z0-9-]+');
 
     // Blog comments
     Route::get('blog/{postId}/comments',  [BlogApiController::class, 'comments'])->whereNumber('postId');
@@ -41,4 +44,13 @@ Route::prefix('v2')->group(function () {
 
     // Partners
     Route::get('partners', [PartnerApiController::class, 'index']);
+
+    // Protected Areas
+    Route::get('protected-areas', [ProtectedAreaApiController::class, 'index']);
+
+    // Site Stats
+    Route::get('site-stats', [SiteStatApiController::class, 'index']);
+
+    // Team Members
+    Route::get('team', [TeamMemberApiController::class, 'index']);
 });

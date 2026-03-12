@@ -110,6 +110,24 @@
                     <span class="sidebar-item-icon"><i class="bi bi-people-fill"></i></span>
                     Hamkorlar
                 </a>
+
+                <a href="{{ route('admin.protected-areas.index') }}"
+                   class="sidebar-item {{ request()->routeIs('admin.protected-areas.*') ? 'active' : '' }}">
+                    <span class="sidebar-item-icon"><i class="bi bi-shield-fill"></i></span>
+                    Muhofaza hududlari
+                </a>
+
+                <a href="{{ route('admin.site-stats.index') }}"
+                   class="sidebar-item {{ request()->routeIs('admin.site-stats.*') ? 'active' : '' }}">
+                    <span class="sidebar-item-icon"><i class="bi bi-bar-chart-fill"></i></span>
+                    Sayt statistikasi
+                </a>
+
+                <a href="{{ route('admin.team.index') }}"
+                   class="sidebar-item {{ request()->routeIs('admin.team.*') ? 'active' : '' }}">
+                    <span class="sidebar-item-icon"><i class="bi bi-people-fill"></i></span>
+                    Bizning jamoa
+                </a>
             </div>
 
         </nav>

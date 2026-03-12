@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V2;
 
 use App\Http\Controllers\Controller;
 use App\Models\NaturalResource;
+use App\Models\ProtectedArea;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -143,10 +144,19 @@ class NaturalResourceApiController extends Controller
 
     public function categories(): JsonResponse
     {
-        $categories = NaturalResource::active()
-            ->whereNotNull('category')
-            ->distinct()
-            ->pluck('category');
+        $categories = ProtectedArea::active()
+            ->orderBy('order')
+            ->get()
+            ->map(fn($area) => [
+                'slug' => $area->slug,
+                'name' => [
+                    'uz' => $area->name_uz,
+                    'ru' => $area->name_ru,
+                    'en' => $area->name_en,
+                ],
+                'icon'  => $area->icon,
+                'count' => $area->count_text,
+            ]);
 
         return response()->json([
             'success' => true,
