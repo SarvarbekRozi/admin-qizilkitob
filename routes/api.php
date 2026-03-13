@@ -11,8 +11,7 @@ use App\Http\Controllers\Api\V2\TeamMemberApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v2')->group(function () {
-
+$routes = function () {
     // Species routes
     Route::get('species/featured', [SpeciesApiController::class, 'featured']);
     Route::get('species/stats',    [SpeciesApiController::class, 'stats']);
@@ -53,4 +52,10 @@ Route::prefix('v2')->group(function () {
 
     // Team Members
     Route::get('team', [TeamMemberApiController::class, 'index']);
-});
+};
+
+// /api/v2/... (eski)
+Route::prefix('v2')->group($routes);
+
+// /api/... (v2 siz ham ishlaydi)
+Route::group([], $routes);
