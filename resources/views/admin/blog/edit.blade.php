@@ -65,7 +65,8 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">Kontent ({{ $langLabel }})</label>
-                        <textarea name="content_{{ $lang }}" class="form-control" rows="10">{{ old('content_'.$lang, $blog->{'content_'.$lang}) }}</textarea>
+                        <div id="editor-{{ $lang }}" style="min-height:250px;"></div>
+                        <textarea name="content_{{ $lang }}" id="content-{{ $lang }}" class="d-none">{{ old('content_'.$lang, $blog->{'content_'.$lang}) }}</textarea>
                     </div>
                 </div>
                 @endforeach
@@ -164,8 +165,44 @@
 </form>
 @endsection
 
+@push('styles')
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<style>
+.ql-container { font-size: 14px; }
+.ql-editor { min-height: 220px; }
+</style>
+@endpush
+
 @push('scripts')
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 <script>
+const quillEditors = {};
+const toolbarOptions = [
+    [{ 'header': [1, 2, 3, false] }],
+    ['bold', 'italic', 'underline'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    ['link', 'blockquote'],
+    ['clean']
+];
+
+['uz', 'ru', 'en'].forEach(function(lang) {
+    const editor = new Quill('#editor-' + lang, {
+        theme: 'snow',
+        modules: { toolbar: toolbarOptions }
+    });
+    const textarea = document.getElementById('content-' + lang);
+    if (textarea.value) {
+        editor.root.innerHTML = textarea.value;
+    }
+    quillEditors[lang] = editor;
+});
+
+document.querySelector('form').addEventListener('submit', function() {
+    ['uz', 'ru', 'en'].forEach(function(lang) {
+        document.getElementById('content-' + lang).value = quillEditors[lang].root.innerHTML;
+    });
+});
+
 function switchLang(lang, btn) {
     document.querySelectorAll('.lang-panel').forEach(p => p.style.display = 'none');
     document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
