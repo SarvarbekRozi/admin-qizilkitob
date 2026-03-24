@@ -13,7 +13,7 @@
 
 @section('content')
 
-<form method="POST" action="{{ route('admin.blog.update', $blog) }}" enctype="multipart/form-data">
+<form id="main-form" method="POST" action="{{ route('admin.blog.update', $blog) }}" enctype="multipart/form-data">
 @csrf @method('PUT')
 
 <div class="page-header">
@@ -197,7 +197,7 @@ const toolbarOptions = [
     quillEditors[lang] = editor;
 });
 
-document.querySelector('form').addEventListener('submit', function() {
+document.getElementById('main-form').addEventListener('submit', function() {
     ['uz', 'ru', 'en'].forEach(function(lang) {
         document.getElementById('content-' + lang).value = quillEditors[lang].root.innerHTML;
     });

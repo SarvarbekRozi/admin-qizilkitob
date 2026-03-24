@@ -13,7 +13,7 @@
 
 @section('content')
 
-<form method="POST" action="{{ route('admin.natural-resources.store') }}" enctype="multipart/form-data">
+<form id="main-form" method="POST" action="{{ route('admin.natural-resources.store') }}" enctype="multipart/form-data">
 @csrf
 
 <div class="page-header">
@@ -228,7 +228,7 @@ const toolbarOptions = [
     quillEditors[lang] = editor;
 });
 
-document.querySelector('form').addEventListener('submit', function() {
+document.getElementById('main-form').addEventListener('submit', function() {
     ['uz', 'ru', 'en'].forEach(function(lang) {
         document.getElementById('content-' + lang).value = quillEditors[lang].root.innerHTML;
     });
