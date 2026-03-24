@@ -12,16 +12,6 @@ use Illuminate\Validation\ValidationException;
 
 class BlogApiController extends Controller
 {
-    private function toHtml(?string $text): string
-    {
-        if (!$text) return '';
-        if (str_contains($text, '<p>') || str_contains($text, '<br')) {
-            return $text;
-        }
-        $paragraphs = array_filter(array_map('trim', explode("\n", $text)));
-        return implode('', array_map(fn($p) => "<p>{$p}</p>", $paragraphs));
-    }
-
     private function formatPost(BlogPost $post): array
     {
         return [
@@ -38,9 +28,9 @@ class BlogApiController extends Controller
                 'en' => $post->excerpt_en ?? '',
             ],
             'content'     => [
-                'uz' => $this->toHtml($post->content_uz),
-                'ru' => $this->toHtml($post->content_ru),
-                'en' => $this->toHtml($post->content_en),
+                'uz' => $post->content_uz ?? '',
+                'ru' => $post->content_ru ?? '',
+                'en' => $post->content_en ?? '',
             ],
             'image'       => $post->image,
             'author'      => $post->author ?? '',

@@ -10,18 +10,6 @@ use Illuminate\Http\Request;
 
 class NaturalResourceApiController extends Controller
 {
-    private function toHtml(?string $text): string
-    {
-        if (!$text) return '';
-        // Already HTML (from Quill editor)
-        if (str_contains($text, '<p>') || str_contains($text, '<br')) {
-            return $text;
-        }
-        // Plain text — convert newlines to paragraphs
-        $paragraphs = array_filter(array_map('trim', explode("\n", $text)));
-        return implode('', array_map(fn($p) => "<p>{$p}</p>", $paragraphs));
-    }
-
     private function formatResource(NaturalResource $r): array
     {
         $mainImg = $r->image ? [
@@ -53,9 +41,9 @@ class NaturalResourceApiController extends Controller
                 'en' => $r->excerpt_en ?? '',
             ],
             'content'  => [
-                'uz' => $this->toHtml($r->content_uz),
-                'ru' => $this->toHtml($r->content_ru),
-                'en' => $this->toHtml($r->content_en),
+                'uz' => $r->content_uz ?? '',
+                'ru' => $r->content_ru ?? '',
+                'en' => $r->content_en ?? '',
             ],
             'image'    => $r->image,
             'category' => $r->category ?? '',
