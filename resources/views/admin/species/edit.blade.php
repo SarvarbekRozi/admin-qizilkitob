@@ -279,9 +279,9 @@
                         <img src="{{ $species->image_main }}" alt="" style="width:100%; border-radius:8px; border:1px solid var(--border);">
                     </div>
                 @endif
-                <div class="img-upload-area" onclick="document.getElementById('image_main').click()">
+                <div class="img-upload-area">
                     <input type="file" id="image_main" name="image_main" accept="image/*"
-                           onchange="previewImage(this, 'preview_main')">
+                           onchange="previewImage(this, 'preview_main', 5)">
                     <div class="img-upload-icon">📷</div>
                     <div class="img-upload-text">{{ $species->image_main ? 'Yangi rasm yuklash' : 'Rasm yuklash' }}</div>
                     <div class="img-upload-hint">PNG, JPG, WEBP &bull; Max 5MB</div>

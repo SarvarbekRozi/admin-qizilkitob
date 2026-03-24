@@ -152,9 +152,9 @@
                         <div style="margin-top:6px;font-size:12px;color:#999;">Mavjud rasm</div>
                     </div>
                 @endif
-                <div class="img-upload-area" onclick="document.getElementById('team_image').click()">
+                <div class="img-upload-area">
                     <input type="file" id="team_image" name="image" accept="image/*"
-                           onchange="previewImage(this, 'preview_team')">
+                           onchange="previewImage(this, 'preview_team', 3)">
                     <div class="img-upload-icon">👤</div>
                     <div class="img-upload-text">{{ $team->image ? 'Yangi rasm yuklash' : 'Rasm yuklash' }}</div>
                     <div class="img-upload-hint">PNG, JPG, WebP &bull; Max 3MB</div>

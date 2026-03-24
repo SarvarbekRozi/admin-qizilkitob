@@ -164,9 +164,9 @@
                 <h6><i class="bi bi-image me-2"></i>Asosiy rasm</h6>
             </div>
             <div class="card-body">
-                <div class="img-upload-area" onclick="document.getElementById('res_image').click()">
+                <div class="img-upload-area">
                     <input type="file" id="res_image" name="image" accept="image/*"
-                           onchange="previewImage(this, 'preview_res')">
+                           onchange="previewImage(this, 'preview_res', 5)">
                     <div class="img-upload-icon">📷</div>
                     <div class="img-upload-text">Rasm yuklash</div>
                     <div class="img-upload-hint">PNG, JPG, WEBP &bull; Max 5MB</div>

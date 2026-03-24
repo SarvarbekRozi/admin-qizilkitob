@@ -170,9 +170,9 @@
                         <img src="{{ $naturalResource->image }}" alt="" style="width:100%; border-radius:8px; border:1px solid var(--border);">
                     </div>
                 @endif
-                <div class="img-upload-area" onclick="document.getElementById('res_image').click()">
+                <div class="img-upload-area">
                     <input type="file" id="res_image" name="image" accept="image/*"
-                           onchange="previewImage(this, 'preview_res')">
+                           onchange="previewImage(this, 'preview_res', 5)">
                     <div class="img-upload-icon">📷</div>
                     <div class="img-upload-text">{{ $naturalResource->image ? 'Yangi rasm' : 'Rasm yuklash' }}</div>
                     <div class="img-upload-hint">PNG, JPG &bull; Max 5MB</div>

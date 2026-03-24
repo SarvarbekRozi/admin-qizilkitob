@@ -121,9 +121,9 @@
                 <h6><i class="bi bi-image me-2"></i>Logo</h6>
             </div>
             <div class="card-body">
-                <div class="img-upload-area" onclick="document.getElementById('partner_logo').click()">
+                <div class="img-upload-area">
                     <input type="file" id="partner_logo" name="logo" accept="image/*"
-                           onchange="previewImage(this, 'preview_logo')">
+                           onchange="previewImage(this, 'preview_logo', 2)">
                     <div class="img-upload-icon">🤝</div>
                     <div class="img-upload-text">Logo yuklash</div>
                     <div class="img-upload-hint">PNG, SVG, JPG, WebP &bull; Max 2MB</div>

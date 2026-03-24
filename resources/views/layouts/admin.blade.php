@@ -271,8 +271,30 @@ document.querySelectorAll('.confirm-delete').forEach(function(form) {
 });
 
 // Image preview
-function previewImage(input, previewId) {
+function previewImage(input, previewId, maxMB) {
+    maxMB = maxMB || 5;
+    const errorId = previewId + '_error';
+    const oldError = document.getElementById(errorId);
+    if (oldError) oldError.remove();
+
     if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const sizeMB = file.size / (1024 * 1024);
+
+        if (sizeMB > maxMB) {
+            input.value = '';
+            const preview = document.getElementById(previewId);
+            if (preview) { preview.src = ''; preview.style.display = 'none'; }
+
+            const error = document.createElement('div');
+            error.id = errorId;
+            error.className = 'alert alert-danger mt-2 py-2';
+            error.style.fontSize = '13px';
+            error.textContent = 'Rasm hajmi ' + maxMB + 'MB dan oshmasligi kerak. Tanlangan fayl: ' + sizeMB.toFixed(1) + 'MB';
+            input.closest('.form-group, .card-body').appendChild(error);
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = function(e) {
             const preview = document.getElementById(previewId);
@@ -281,7 +303,7 @@ function previewImage(input, previewId) {
                 preview.style.display = 'block';
             }
         };
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
     }
 }
 </script>

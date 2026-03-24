@@ -139,9 +139,9 @@
                 @endif
                 <div class="form-group">
                     <label class="form-label">{{ $blog->image ? 'Yangi rasm' : 'Muqova rasmi' }}</label>
-                    <div class="img-upload-area" onclick="document.getElementById('blog_image').click()">
+                    <div class="img-upload-area">
                         <input type="file" id="blog_image" name="image" accept="image/*"
-                               onchange="previewImage(this, 'preview_blog')">
+                               onchange="previewImage(this, 'preview_blog', 5)">
                         <div class="img-upload-icon">📷</div>
                         <div class="img-upload-text">Rasm yuklash</div>
                         <div class="img-upload-hint">PNG, JPG, WEBP &bull; Max 5MB</div>

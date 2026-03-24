@@ -140,9 +140,9 @@
                 <h6><i class="bi bi-person-circle me-2"></i>Rasm</h6>
             </div>
             <div class="card-body">
-                <div class="img-upload-area" onclick="document.getElementById('team_image').click()">
+                <div class="img-upload-area">
                     <input type="file" id="team_image" name="image" accept="image/*"
-                           onchange="previewImage(this, 'preview_team')">
+                           onchange="previewImage(this, 'preview_team', 3)">
                     <div class="img-upload-icon">👤</div>
                     <div class="img-upload-text">Rasm yuklash</div>
                     <div class="img-upload-hint">PNG, JPG, WebP &bull; Max 3MB</div>
