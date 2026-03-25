@@ -199,11 +199,17 @@
                     </div>
                     <div id="gal-remove-inputs"></div>
                 @endif
+                @if(empty($naturalResource->image_gallery))
+                    <div id="gal-remove-inputs"></div>
+                @endif
                 <div class="img-upload-area">
-                    <input type="file" name="image_gallery[]" accept="image/*" multiple>
+                    <input type="file" name="image_gallery[]" accept="image/*" multiple onchange="previewNewGallery(this, 'new-gal-preview', 'gal-err')">
                     <div class="img-upload-icon">🖼️</div>
                     <div class="img-upload-text">Yangi rasmlar qo'shish</div>
+                    <div class="img-upload-hint">Bir nechta tanlash mumkin &bull; Max 5MB</div>
                 </div>
+                <div id="new-gal-preview" class="gallery-grid mt-2"></div>
+                <div id="gal-err"></div>
             </div>
         </div>
 
@@ -265,6 +271,32 @@ function removeGal(img, id) {
     input.name = 'gallery_remove[]';
     input.value = img;
     document.getElementById('gal-remove-inputs')?.appendChild(input);
+}
+
+function previewNewGallery(input, previewId, errId) {
+    const grid = document.getElementById(previewId);
+    const errEl = document.getElementById(errId);
+    grid.innerHTML = '';
+    if (errEl) errEl.innerHTML = '';
+    const maxMB = 5;
+    const oversize = [];
+    Array.from(input.files).forEach(function(file) {
+        const sizeMB = file.size / (1024 * 1024);
+        if (sizeMB > maxMB) { oversize.push(file.name + ' (' + sizeMB.toFixed(1) + 'MB)'); return; }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'gallery-item';
+            div.innerHTML = '<img src="' + e.target.result + '" alt="">';
+            grid.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+    if (oversize.length) {
+        input.value = '';
+        grid.innerHTML = '';
+        if (errEl) errEl.innerHTML = '<div class="alert alert-danger mt-2 py-2" style="font-size:13px;">Quyidagi rasmlar ' + maxMB + 'MB dan katta: ' + oversize.join(', ') + '</div>';
+    }
 }
 </script>
 @endpush

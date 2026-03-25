@@ -244,7 +244,11 @@ function switchLang(lang, btn) {
 function previewGallery(input) {
     const grid = document.getElementById('gallery-preview');
     grid.innerHTML = '';
+    const maxMB = 5;
+    const oversize = [];
     Array.from(input.files).forEach(file => {
+        const sizeMB = file.size / (1024 * 1024);
+        if (sizeMB > maxMB) { oversize.push(file.name + ' (' + sizeMB.toFixed(1) + 'MB)'); return; }
         const reader = new FileReader();
         reader.onload = e => {
             const div = document.createElement('div');
@@ -254,6 +258,18 @@ function previewGallery(input) {
         };
         reader.readAsDataURL(file);
     });
+    const oldErr = document.getElementById('gallery_err');
+    if (oldErr) oldErr.remove();
+    if (oversize.length) {
+        input.value = '';
+        grid.innerHTML = '';
+        const err = document.createElement('div');
+        err.id = 'gallery_err';
+        err.className = 'alert alert-danger mt-2 py-2';
+        err.style.fontSize = '13px';
+        err.textContent = 'Quyidagi rasmlar ' + maxMB + 'MB dan katta: ' + oversize.join(', ');
+        input.closest('.card-body').appendChild(err);
+    }
 }
 </script>
 @endpush
