@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V2\AboutPageApiController;
 use App\Http\Controllers\Api\V2\BlogApiController;
 use App\Http\Controllers\Api\V2\ContactApiController;
 use App\Http\Controllers\Api\V2\NaturalResourceApiController;
@@ -53,6 +54,9 @@ $routes = function () {
 
     // Team Members
     Route::get('team', [TeamMemberApiController::class, 'index']);
+
+    // About page
+    Route::get('about', [AboutPageApiController::class, 'show']);
 };
 
 // /api/v2/... (eski)

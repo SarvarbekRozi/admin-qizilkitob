@@ -149,6 +149,12 @@
                     Sayt statistikasi
                 </a>
 
+                <a href="{{ route('admin.about-page.edit') }}"
+                   class="sidebar-item {{ request()->routeIs('admin.about-page.*') ? 'active' : '' }}">
+                    <span class="sidebar-item-icon"><i class="bi bi-info-circle-fill"></i></span>
+                    Biz haqimizda sahifasi
+                </a>
+
                 <a href="{{ route('admin.team.index') }}"
                    class="sidebar-item {{ request()->routeIs('admin.team.*') ? 'active' : '' }}">
                     <span class="sidebar-item-icon"><i class="bi bi-people-fill"></i></span>

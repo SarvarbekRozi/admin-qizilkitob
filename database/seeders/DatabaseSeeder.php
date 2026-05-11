@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             StateReserveSeeder::class,
             OtherProtectedAreasSeeder::class,
             MilliyTabiatBoglariSeeder::class,
+            AboutPageSeeder::class,
         ]);
     }
 }

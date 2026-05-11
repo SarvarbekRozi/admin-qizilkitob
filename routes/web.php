@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\ContactController;
@@ -62,4 +63,8 @@ Route::prefix('admin')->middleware('auth')->name('admin.')->group(function () {
 
     // Team Members
     Route::resource('team', TeamMemberController::class);
+
+    // About page (singleton)
+    Route::get('about-page', [AboutPageController::class, 'edit'])->name('about-page.edit');
+    Route::put('about-page', [AboutPageController::class, 'update'])->name('about-page.update');
 });
