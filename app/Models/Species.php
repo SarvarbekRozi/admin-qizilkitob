@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -14,6 +15,7 @@ class Species extends Model
     protected $fillable = [
         'slug',
         'category',
+        'family_id',
         'danger_level',
         'name_uz',
         'name_ru',
@@ -100,6 +102,20 @@ class Species extends Model
     public function scopeByDangerLevel(Builder $query, string $level): Builder
     {
         return $query->where('danger_level', $level);
+    }
+
+    public function scopeByFamily(Builder $query, int|string $family): Builder
+    {
+        if (is_numeric($family)) {
+            return $query->where('family_id', (int) $family);
+        }
+
+        return $query->whereHas('family', fn ($q) => $q->where('slug', $family));
+    }
+
+    public function family(): BelongsTo
+    {
+        return $this->belongsTo(SpeciesFamily::class, 'family_id');
     }
 
     // Danger level label

@@ -31,14 +31,18 @@ class NaturalResourceController extends Controller
         $resources = $query->paginate(15)->withQueryString();
         $protectedAreas = ProtectedArea::active()->orderBy('order')->get();
         $areasMap = $protectedAreas->pluck('name_uz', 'slug');
+        $currentArea = $request->filled('category')
+            ? $protectedAreas->firstWhere('slug', $request->category)
+            : null;
 
-        return view('admin.natural-resources.index', compact('resources', 'protectedAreas', 'areasMap'));
+        return view('admin.natural-resources.index', compact('resources', 'protectedAreas', 'areasMap', 'currentArea'));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
         $protectedAreas = ProtectedArea::active()->orderBy('order')->get();
-        return view('admin.natural-resources.create', compact('protectedAreas'));
+        $prefillCategory = $request->query('category');
+        return view('admin.natural-resources.create', compact('protectedAreas', 'prefillCategory'));
     }
 
     public function store(Request $request): RedirectResponse

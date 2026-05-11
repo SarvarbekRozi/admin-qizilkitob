@@ -138,7 +138,7 @@
                         <option value="">— Tanlang —</option>
                         @foreach($protectedAreas as $area)
                             <option value="{{ $area->slug }}"
-                                {{ old('category') === $area->slug ? 'selected' : '' }}>
+                                {{ old('category', $prefillCategory ?? null) === $area->slug ? 'selected' : '' }}>
                                 {{ $area->name_uz }}
                             </option>
                         @endforeach

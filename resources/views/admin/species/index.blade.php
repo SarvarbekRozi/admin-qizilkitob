@@ -41,6 +41,17 @@
             </select>
         </div>
         <div class="form-group">
+            <label class="form-label">Oila / Sinf</label>
+            <select name="family_id" class="form-select">
+                <option value="">Barchasi</option>
+                @foreach ($families as $f)
+                    <option value="{{ $f->id }}" {{ (string) request('family_id') === (string) $f->id ? 'selected' : '' }}>
+                        {{ $f->category === 'animal' ? '🦊' : '🌱' }} {{ $f->name_uz }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
             <label class="form-label">Xavf darajasi</label>
             <select name="danger_level" class="form-select">
                 <option value="">Barchasi</option>
@@ -54,7 +65,7 @@
             <button type="submit" class="btn-primary-custom">
                 <i class="bi bi-funnel"></i> Filter
             </button>
-            @if(request()->hasAny(['search', 'category', 'danger_level']))
+            @if(request()->hasAny(['search', 'category', 'family_id', 'danger_level']))
                 <a href="{{ route('admin.species.index') }}" class="btn-secondary-custom ms-2">
                     <i class="bi bi-x"></i> Tozalash
                 </a>
@@ -73,6 +84,7 @@
                     <th>Nomi</th>
                     <th>Ilmiy nomi</th>
                     <th>Kategoriya</th>
+                    <th>Oila</th>
                     <th>Xavf darajasi</th>
                     <th>Ko'rishlar</th>
                     <th>Status</th>
@@ -107,6 +119,16 @@
                             <span class="badge {{ $sp->category === 'animal' ? 'badge-animal' : 'badge-plant' }}">
                                 {{ $sp->category === 'animal' ? '🦊 Hayvon' : '🌱 O\'simlik' }}
                             </span>
+                        </td>
+                        <td style="font-size:12px;">
+                            @if ($sp->family)
+                                <div style="font-weight:500;">{{ $sp->family->name_uz }}</div>
+                                @if ($sp->family->latin_name)
+                                    <div style="font-size:10px; color:var(--text-muted); font-style:italic;">{{ $sp->family->latin_name }}</div>
+                                @endif
+                            @else
+                                <span style="color:var(--text-muted);">—</span>
+                            @endif
                         </td>
                         <td>
                             @php
@@ -144,7 +166,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" style="text-align:center; padding:48px; color:var(--text-muted);">
+                        <td colspan="9" style="text-align:center; padding:48px; color:var(--text-muted);">
                             <i class="bi bi-inbox" style="font-size:40px; display:block; margin-bottom:12px;"></i>
                             Turlar topilmadi
                         </td>

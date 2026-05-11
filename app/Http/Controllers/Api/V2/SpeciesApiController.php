@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V2;
 
 use App\Http\Controllers\Controller;
 use App\Models\Species;
+use App\Models\SpeciesFamily;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -75,15 +76,29 @@ class SpeciesApiController extends Controller
             'relatedSpecies'   => $s->related_species ?? [],
             'viewsCount'       => $s->views_count ?? 0,
             'featured'         => (bool) $s->featured,
+            'family'           => $s->family ? [
+                'id'         => $s->family->id,
+                'slug'       => $s->family->slug,
+                'name'       => [
+                    'uz' => $s->family->name_uz,
+                    'ru' => $s->family->name_ru,
+                    'en' => $s->family->name_en,
+                ],
+                'latinName'  => $s->family->latin_name,
+            ] : null,
         ];
     }
 
     public function index(Request $request): JsonResponse
     {
-        $query = Species::active()->orderBy('name_uz');
+        $query = Species::active()->with('family')->orderBy('name_uz');
 
         if ($request->filled('category')) {
             $query->byCategory($request->category);
+        }
+
+        if ($request->filled('family')) {
+            $query->byFamily($request->family);
         }
 
         if ($request->filled('danger_level')) {
@@ -121,7 +136,7 @@ class SpeciesApiController extends Controller
 
     public function show(string $slug): JsonResponse
     {
-        $species = Species::active()->where('slug', $slug)->firstOrFail();
+        $species = Species::active()->with('family')->where('slug', $slug)->firstOrFail();
         $species->increment('views_count');
 
         $related = [];
@@ -192,6 +207,35 @@ class SpeciesApiController extends Controller
                     'coordinates' => ['lat' => (float) $s->latitude, 'lng' => (float) $s->longitude],
                 ],
             ])->values()->toArray()],
+        ]);
+    }
+
+    public function families(Request $request): JsonResponse
+    {
+        $query = SpeciesFamily::active()
+            ->withCount(['species' => fn ($q) => $q->where('is_active', true)])
+            ->orderBy('sort');
+
+        if ($request->filled('category') && in_array($request->category, ['animal', 'plant'], true)) {
+            $query->where('category', $request->category);
+        }
+
+        $families = $query->get()->map(fn ($f) => [
+            'id'           => $f->id,
+            'slug'         => $f->slug,
+            'category'     => $f->category,
+            'name'         => [
+                'uz' => $f->name_uz,
+                'ru' => $f->name_ru,
+                'en' => $f->name_en,
+            ],
+            'latinName'    => $f->latin_name,
+            'speciesCount' => $f->species_count,
+        ])->values()->toArray();
+
+        return response()->json([
+            'success' => true,
+            'result'  => ['data' => $families],
         ]);
     }
 

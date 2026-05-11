@@ -17,6 +17,7 @@ $routes = function () {
     Route::get('species/stats',    [SpeciesApiController::class, 'stats']);
     Route::get('species/map',      [SpeciesApiController::class, 'map']);
     Route::get('species/gallery',  [SpeciesApiController::class, 'gallery']);
+    Route::get('species/families', [SpeciesApiController::class, 'families']);
     Route::get('species',          [SpeciesApiController::class, 'index']);
     Route::get('species/{slug}',   [SpeciesApiController::class, 'show']);
 

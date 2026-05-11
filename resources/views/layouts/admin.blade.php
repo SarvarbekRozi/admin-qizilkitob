@@ -111,11 +111,37 @@
                     Hamkorlar
                 </a>
 
-                <a href="{{ route('admin.protected-areas.index') }}"
-                   class="sidebar-item {{ request()->routeIs('admin.protected-areas.*') ? 'active' : '' }}">
-                    <span class="sidebar-item-icon"><i class="bi bi-shield-fill"></i></span>
-                    Muhofaza hududlari
-                </a>
+                @php
+                    $sidebarAreas       = \App\Models\ProtectedArea::orderBy('order')->orderBy('name_uz')->get();
+                    $currentCategory    = request('category');
+                    $isCategoryFiltered = request()->routeIs('admin.natural-resources.index') && $currentCategory;
+                    $protectedAreasOpen = request()->routeIs('admin.protected-areas.*') || $isCategoryFiltered;
+                @endphp
+                <div>
+                    <div class="sidebar-item {{ $protectedAreasOpen ? 'active' : '' }}"
+                         data-bs-toggle="collapse" data-bs-target="#protectedAreasMenu"
+                         aria-expanded="{{ $protectedAreasOpen ? 'true' : 'false' }}"
+                         style="cursor:pointer;">
+                        <span class="sidebar-item-icon"><i class="bi bi-shield-fill"></i></span>
+                        Muhofaza hududlari
+                        <i class="bi bi-chevron-down ms-auto" style="font-size:11px; transition:transform 0.2s;"></i>
+                    </div>
+                    <div class="collapse {{ $protectedAreasOpen ? 'show' : '' }}" id="protectedAreasMenu">
+                        <div class="sidebar-submenu">
+                            @foreach($sidebarAreas as $area)
+                                <a href="{{ route('admin.natural-resources.index', ['category' => $area->slug]) }}"
+                                   class="sidebar-item {{ $currentCategory === $area->slug ? 'active' : '' }}">
+                                    {{ $area->name_uz }}
+                                </a>
+                            @endforeach
+                            <a href="{{ route('admin.protected-areas.index') }}"
+                               class="sidebar-item {{ request()->routeIs('admin.protected-areas.*') ? 'active' : '' }}"
+                               style="border-top:1px solid var(--border); margin-top:4px; padding-top:8px;">
+                                <i class="bi bi-gear me-1"></i> Kategoriyalarni boshqarish
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
                 <a href="{{ route('admin.site-stats.index') }}"
                    class="sidebar-item {{ request()->routeIs('admin.site-stats.*') ? 'active' : '' }}">

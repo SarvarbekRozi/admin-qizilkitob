@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Species;
+use App\Models\SpeciesFamily;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,7 @@ class SpeciesController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Species::orderByDesc('created_at');
+        $query = Species::with('family')->orderByDesc('created_at');
 
         if ($request->filled('search')) {
             $s = $request->search;
@@ -28,19 +29,25 @@ class SpeciesController extends Controller
             $query->where('category', $request->category);
         }
 
+        if ($request->filled('family_id')) {
+            $query->where('family_id', $request->family_id);
+        }
+
         if ($request->filled('danger_level')) {
             $query->where('danger_level', $request->danger_level);
         }
 
         $species = $query->paginate(15)->withQueryString();
+        $families = SpeciesFamily::active()->orderBy('category')->orderBy('sort')->get();
 
-        return view('admin.species.index', compact('species'));
+        return view('admin.species.index', compact('species', 'families'));
     }
 
     public function create(): View
     {
         $allSpecies = Species::orderBy('name_uz')->get(['id', 'name_uz', 'scientific_name']);
-        return view('admin.species.create', compact('allSpecies'));
+        $families = SpeciesFamily::active()->orderBy('category')->orderBy('sort')->get();
+        return view('admin.species.create', compact('allSpecies', 'families'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -51,6 +58,7 @@ class SpeciesController extends Controller
             'name_en'          => 'required|string|max:255',
             'scientific_name'  => 'required|string|max:255',
             'category'         => 'required|in:animal,plant',
+            'family_id'        => 'nullable|exists:species_families,id',
             'danger_level'     => 'required|in:critically_endangered,endangered,vulnerable,near_threatened',
             'slug'             => 'nullable|string|unique:species,slug|max:255',
             'image_main'       => 'nullable|image|max:5120',
@@ -120,8 +128,9 @@ class SpeciesController extends Controller
         $allSpecies = Species::where('id', '!=', $species->id)
             ->orderBy('name_uz')
             ->get(['id', 'name_uz', 'scientific_name']);
+        $families = SpeciesFamily::active()->orderBy('category')->orderBy('sort')->get();
 
-        return view('admin.species.edit', compact('species', 'allSpecies'));
+        return view('admin.species.edit', compact('species', 'allSpecies', 'families'));
     }
 
     public function update(Request $request, Species $species): RedirectResponse
@@ -132,6 +141,7 @@ class SpeciesController extends Controller
             'name_en'         => 'required|string|max:255',
             'scientific_name' => 'required|string|max:255',
             'category'        => 'required|in:animal,plant',
+            'family_id'       => 'nullable|exists:species_families,id',
             'danger_level'    => 'required|in:critically_endangered,endangered,vulnerable,near_threatened',
             'slug'            => 'nullable|string|max:255|unique:species,slug,' . $species->id,
             'image_main'      => 'nullable|image|max:5120',

@@ -72,10 +72,24 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label">Kategoriya <span class="req-badge">Majburiy</span></label>
-                            <select name="category" class="form-select" required>
+                            <select name="category" id="category-select" class="form-select" required>
                                 <option value="animal" {{ old('category', $species->category) === 'animal' ? 'selected' : '' }}>🦊 Hayvon</option>
                                 <option value="plant" {{ old('category', $species->category) === 'plant' ? 'selected' : '' }}>🌱 O'simlik</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Oila / Sinf</label>
+                            <select name="family_id" id="family-select" class="form-select">
+                                <option value="">Tanlanmagan</option>
+                                @foreach ($families as $f)
+                                    <option value="{{ $f->id }}" data-category="{{ $f->category }}" {{ old('family_id', $species->family_id) == $f->id ? 'selected' : '' }}>
+                                        {{ $f->name_uz }}@if ($f->latin_name) — {{ $f->latin_name }}@endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="form-hint">Hayvonlar — sinflar, O'simliklar — oilalar</div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -385,5 +399,30 @@ function previewNewGallery(input) {
         input.closest('.card-body').appendChild(error);
     }
 }
+
+// Family dropdown: kategoriyaga qarab oilalarni filterlash
+(function() {
+    const categorySelect = document.getElementById('category-select');
+    const familySelect = document.getElementById('family-select');
+    if (!categorySelect || !familySelect) return;
+
+    function filterFamilies() {
+        const cat = categorySelect.value;
+        Array.from(familySelect.options).forEach(opt => {
+            if (!opt.value) {
+                opt.hidden = false;
+                return;
+            }
+            const matches = !cat || opt.dataset.category === cat;
+            opt.hidden = !matches;
+            if (!matches && opt.selected) {
+                familySelect.value = '';
+            }
+        });
+    }
+
+    categorySelect.addEventListener('change', filterFamilies);
+    filterFamilies();
+})();
 </script>
 @endpush

@@ -1,22 +1,35 @@
 @extends('layouts.admin')
 
-@section('title', 'Tabiiy boyliklar')
-@section('page-title', 'Tabiiy boyliklar')
+@php $pageTitle = $currentArea?->name_uz ?? 'Tabiiy boyliklar'; @endphp
+@section('title', $pageTitle)
+@section('page-title', $pageTitle)
 
 @section('breadcrumb')
     <a href="{{ route('admin.dashboard') }}">Bosh</a>
     <span class="sep">/</span>
-    <span>Tabiiy boyliklar</span>
+    @if($currentArea)
+        <a href="{{ route('admin.natural-resources.index') }}">Tabiiy boyliklar</a>
+        <span class="sep">/</span>
+        <span>{{ $currentArea->name_uz }}</span>
+    @else
+        <span>Tabiiy boyliklar</span>
+    @endif
 @endsection
 
 @section('content')
 
 <div class="page-header">
     <div class="page-header-left">
-        <h1>Tabiiy boyliklar</h1>
-        <p class="subtitle">O'zbekistonning muhofaza qilinadigan tabiiy boyliklari</p>
+        <h1>{{ $pageTitle }}</h1>
+        <p class="subtitle">
+            @if($currentArea)
+                {{ $currentArea->name_ru ?? '' }}
+            @else
+                O'zbekistonning muhofaza qilinadigan tabiiy boyliklari
+            @endif
+        </p>
     </div>
-    <a href="{{ route('admin.natural-resources.create') }}" class="btn-primary-custom">
+    <a href="{{ route('admin.natural-resources.create', $currentArea ? ['category' => $currentArea->slug] : []) }}" class="btn-primary-custom">
         <i class="bi bi-plus-lg"></i> Yangi boylik
     </a>
 </div>

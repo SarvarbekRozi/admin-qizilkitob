@@ -73,11 +73,25 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label">Kategoriya <span class="req-badge">Majburiy</span></label>
-                            <select name="category" class="form-select" required>
+                            <select name="category" id="category-select" class="form-select" required>
                                 <option value="">Tanlang...</option>
                                 <option value="animal" {{ old('category') === 'animal' ? 'selected' : '' }}>🦊 Hayvon</option>
                                 <option value="plant" {{ old('category') === 'plant' ? 'selected' : '' }}>🌱 O'simlik</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Oila / Sinf</label>
+                            <select name="family_id" id="family-select" class="form-select">
+                                <option value="">Avval kategoriyani tanlang</option>
+                                @foreach ($families as $f)
+                                    <option value="{{ $f->id }}" data-category="{{ $f->category }}" {{ old('family_id') == $f->id ? 'selected' : '' }}>
+                                        {{ $f->name_uz }}@if ($f->latin_name) — {{ $f->latin_name }}@endif
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="form-hint">Hayvonlar — sinflar (Sutemizuvchilar, Qushlar...), O'simliklar — oilalar (47 ta)</div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -426,5 +440,34 @@ document.querySelector('[name="name_uz"]')?.addEventListener('input', function()
         slugField.placeholder = 'Avtomatik: ' + this.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
     }
 });
+
+// Family dropdown: kategoriyaga qarab oilalarni filterlash
+(function() {
+    const categorySelect = document.getElementById('category-select');
+    const familySelect = document.getElementById('family-select');
+    if (!categorySelect || !familySelect) return;
+
+    function filterFamilies() {
+        const cat = categorySelect.value;
+        let visibleCount = 0;
+        Array.from(familySelect.options).forEach(opt => {
+            if (!opt.value) {
+                opt.textContent = cat ? 'Tanlang...' : 'Avval kategoriyani tanlang';
+                opt.hidden = false;
+                return;
+            }
+            const matches = !cat || opt.dataset.category === cat;
+            opt.hidden = !matches;
+            if (matches) visibleCount++;
+            if (!matches && opt.selected) {
+                familySelect.value = '';
+            }
+        });
+        familySelect.disabled = !cat;
+    }
+
+    categorySelect.addEventListener('change', filterFamilies);
+    filterFamilies();
+})();
 </script>
 @endpush

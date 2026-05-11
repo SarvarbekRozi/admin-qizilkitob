@@ -15,12 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Super admin',
-            'email' => 'admin@example.com',
-            'password' => 'admin2026',
+        $this->call([
+            SpeciesFamilySeeder::class,
+            StateReserveSeeder::class,
+            OtherProtectedAreasSeeder::class,
+            MilliyTabiatBoglariSeeder::class,
         ]);
     }
 }
